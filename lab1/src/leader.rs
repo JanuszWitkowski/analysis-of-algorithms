@@ -35,7 +35,7 @@ pub fn election(n: u32, p: f64, gather_logs: bool) -> (u32, u32, logger::Logger)
     return (leader, slots, logger);
 }
 
-pub fn election_unknown(u: u32, n: u32, gather_logs: bool) -> (u32, u32, u32, u32, logger::Logger) {
+pub fn election_unknown(u: u32, n: u32, stop_at_1: bool, gather_logs: bool) -> (u32, u32, u32, u32, logger::Logger) {
     let mut leader: u32 = 0;
     let mut rounds: u32 = 0;
     let mut slots: u32 = 0;
@@ -73,8 +73,17 @@ pub fn election_unknown(u: u32, n: u32, gather_logs: bool) -> (u32, u32, u32, u3
                 logger = logger::log_collision(logger, i);
             }
         }
+        if stop_at_1 && slot != SINGLE {
+            leader = 0;
+            break;
+        }
     }
 
-    logger = logger::log_leader_with_rounds(logger, leader, rounds, slots, total);
+    if stop_at_1 && slot != SINGLE {
+        logger = logger::log(logger, "Nie udało się wybrać lidera w jednej rundzie.".to_string());
+    }
+    else {
+        logger = logger::log_leader_with_rounds(logger, leader, rounds, slots, total);
+    }
     return (leader, rounds, slots, total, logger);
 }
