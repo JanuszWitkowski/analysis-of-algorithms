@@ -35,7 +35,7 @@ pub fn election(n: u32, p: f64, gather_logs: bool) -> (u32, u32, logger::Logger)
     return (leader, slots, logger);
 }
 
-pub fn election_unknown(u: u32, n: u32, stop_at_1: bool, gather_logs: bool) -> (u32, u32, u32, u32, logger::Logger) {
+pub fn election_unknown(u: u32, n: u32, stop_at_1: bool, gather_logs: bool) -> (u32, u32, u32, u32, u32, logger::Logger) {
     let mut leader: u32 = 0;
     let mut rounds: u32 = 0;
     let mut slots: u32 = 0;
@@ -85,5 +85,5 @@ pub fn election_unknown(u: u32, n: u32, stop_at_1: bool, gather_logs: bool) -> (
     else {
         logger = logger::log_leader_with_rounds(logger, leader, rounds, slots, total);
     }
-    return (leader, rounds, slots, total, logger);
+    return (leader, l, rounds, slots, total, logger);
 }
