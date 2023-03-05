@@ -155,22 +155,22 @@ fn lambda (us: Vec<u32>, iter: usize) {
 }
 
 fn main() {
-    // let n: u32 = 100;
-    // let u: u32 = 512;
-    // const ITER: usize = 1000000;
-    const ITER: usize = 1000;
-    // hist_experiment_known(n, iter);
-    // hist_experiment_unknown(u, iter);
+    let n: u32 = 100;
+    let u: u32 = 512;
+    const ITER: usize = 1000000;
+    // const ITER: usize = 10000;
+    hist_experiment_known(n, ITER);
+    hist_experiment_unknown(u, ITER);
     // let ns: Vec<u32> = vec![10, 20, 30, 40, 50, 60, 70, 80, 90,
     //                         100, 200, 300, 400, 500, 600, 700, 800, 900,
     //                         1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
     //                         10000];
-    let xs1: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
-    let xs2: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
+    // let xs1: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
+    // let xs2: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
     // ev_var(xs1, ITER);
     // lambda(xs2, ITER);
-    let thread_ev_var = thread::spawn(|| {ev_var(xs1, ITER)});
-    let thread_lambda = thread::spawn(|| {lambda(xs2, ITER)});
-    thread_ev_var.join().unwrap();
-    thread_lambda.join().unwrap();
+    // let thread_ev_var = thread::spawn(|| {ev_var(xs1, ITER)});
+    // let thread_lambda = thread::spawn(|| {lambda(xs2, ITER)});
+    // thread_ev_var.join().unwrap();
+    // thread_lambda.join().unwrap();
 }
