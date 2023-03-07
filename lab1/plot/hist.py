@@ -3,12 +3,16 @@ import matplotlib.pyplot as plt
 # import argparse
 import sys
 import math
+import numpy as np
 from data import proper_name, open_numbers
 
 def histogram (filename):
     numbers = open_numbers(filename)
+    max_range = max(numbers)
     name = proper_name(filename)
+    plt.figure().set_figwidth(18)
     plt.hist(numbers)
+    plt.xticks(np.arange(0, max_range, 2))
     # Scale
     # scale_list = range(math.floor(min(numbers)), math.ceil(max(numbers))+1)
     # plt.xticks(scale_list)

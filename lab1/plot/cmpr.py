@@ -14,10 +14,12 @@ def simple_compare (filename, name):
     values = [arr[1] for arr in data]
     # values.insert(0, 0.0)
     efunc = [math.e for _ in ns]
+    evarfunc = [(math.e)**2 - math.e for _ in ns]
     zerofunc = [0.0 for _ in ns]
     plt.figure().set_figwidth(18)
     # plt.plot(ns, zerofunc)
     plt.plot(ns, efunc)
+    plt.plot(ns, evarfunc)
     plt.plot(ns, values)
     plt.ylim(bottom=0.0)
     plt.title(name)
@@ -40,7 +42,7 @@ def lambda_compare (filename, name):
     n75 = [float(arr[6]) for arr in data]
     n90 = [float(arr[7]) for arr in data]
     nu = [float(arr[8]) for arr in data]
-    results = [arr[2:] for arr in data]
+    # results = [arr[2:] for arr in data]
 
     plt.figure(figsize=(16, 8))
     plt.plot(us, lambda_value, label='lambda')

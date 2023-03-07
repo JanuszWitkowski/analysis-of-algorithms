@@ -42,7 +42,8 @@ pub fn election_unknown(u: u32, n: u32, stop_at_1: bool, gather_logs: bool) -> (
     let mut total: u32 = 0;
     let mut logger = logger::Logger::new(gather_logs);
 
-    let l = (u as f32).log2().ceil() as u32;
+    // let l = (u as f32).log2().ceil() as u32;
+    let l = (u as f32).log2().ceil() as u32 + 1;
     let mut p: f64;
     let mut q: f64;
     let mut slot: u32 = 0;
