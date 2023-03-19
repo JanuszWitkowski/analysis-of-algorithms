@@ -17,9 +17,10 @@ fn hist_experiment_known(n: u32, iter: usize) {
         Ok(file) => file,
         Err(error) => panic!("Problem creating file : {:?}", error),
     };
-    for _ in 1..=iter {
+    for i in 1..=iter {
         (_, l, _) = leader::election(n, 1.0 / (n as f64), false);
         write!(output, "{}\n", l).expect("Error while writing data.");
+        println!("HistKnown Progress: {}/{}", i, iter);
     }
 }
 
@@ -35,9 +36,10 @@ fn hist_experiment_unknown(u: u32, iter: usize) {
         Ok(file) => file,
         Err(error) => panic!("Problem creating file : {:?}", error),
     };
-    for _ in 1..=iter {
+    for i in 1..=iter {
         (_, _, _, _, l, _) = leader::election_unknown(u, n1, false, false);
         write!(output1, "{}\n", l).expect("Error while writing data.");
+        println!("Unknown Two Progress: {}/{}", i, iter);
     }
 
     let filename = format!("data_unknown_u{}_half_n{}.txt", u, n2);
@@ -46,9 +48,10 @@ fn hist_experiment_unknown(u: u32, iter: usize) {
         Ok(file) => file,
         Err(error) => panic!("Problem creating file : {:?}", error),
     };
-    for _ in 1..=iter {
+    for i in 1..=iter {
         (_, _, _, _, l, _) = leader::election_unknown(u, n2, false, false);
         write!(output2, "{}\n", l).expect("Error while writing data.");
+        println!("Unknown Half Progress: {}/{}", i, iter);
     }
 
     let filename = format!("data_unknown_u{}_u_n{}.txt", u, n3);
@@ -57,9 +60,10 @@ fn hist_experiment_unknown(u: u32, iter: usize) {
         Ok(file) => file,
         Err(error) => panic!("Problem creating file : {:?}", error),
     };
-    for _ in 1..=iter {
+    for i in 1..=iter {
         (_, _, _, _, l, _) = leader::election_unknown(u, n3, false, false);
         write!(output3, "{}\n", l).expect("Error while writing data.");
+        println!("Unknown U Progress: {}/{}", i, iter);
     }
 }
 
@@ -166,11 +170,25 @@ fn main() {
     //                         1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
     //                         10000];
     // let xs1: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
-    // let xs2: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
+    let xs2: Vec<u32> = vec![16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
     // ev_var(xs1, ITER);
     // lambda(xs2, ITER);
+
+    let thread_hist_known_100 = thread::spawn(|| {hist_experiment_known(100, ITER)});
+    let thread_hist_known_1000 = thread::spawn(|| {hist_experiment_known(1000, ITER)});
+    let thread_hist_known_10000 = thread::spawn(|| {hist_experiment_known(10000, ITER)});
+    let thread_hist_unknown_100 = thread::spawn(|| {hist_experiment_unknown(100, ITER)});
+    let thread_hist_unknown_1000 = thread::spawn(|| {hist_experiment_unknown(1000, ITER)});
+    let thread_hist_unknown_10000 = thread::spawn(|| {hist_experiment_unknown(10000, ITER)});
     // let thread_ev_var = thread::spawn(|| {ev_var(xs1, ITER)});
-    // let thread_lambda = thread::spawn(|| {lambda(xs2, ITER)});
+    let thread_lambda = thread::spawn(|| {lambda(xs2, ITER)});
+
+    thread_hist_known_100.join().unwrap();
+    thread_hist_known_1000.join().unwrap();
+    thread_hist_known_10000.join().unwrap();
+    thread_hist_unknown_100.join().unwrap();
+    thread_hist_unknown_1000.join().unwrap();
+    thread_hist_unknown_10000.join().unwrap();
     // thread_ev_var.join().unwrap();
-    // thread_lambda.join().unwrap();
+    thread_lambda.join().unwrap();
 }
