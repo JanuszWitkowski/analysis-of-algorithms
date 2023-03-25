@@ -1,10 +1,117 @@
 \documentclass{article} 
 
-\title{Hello World!}
-\author{Your Name}
-\date{January 1, 1831}
+% NIE UŻYWAĆ BABELA!!
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[MeX]{polski}
+% \usepackage{amssymb}
+\usepackage{amsmath,amssymb}
+% \parindent=0pt % disables indentation
+% \setlength{\hoffset}{-7.4mm}
+\setlength{\oddsidemargin}{10mm}
+\setlength{\evensidemargin}{4mm}
+\setlength{\textwidth}{140mm}
+
+\usepackage[ruled,vlined,linesnumbered,longend]{algorithm2e}
+\newenvironment{pseudokod}[1][htb]{
+	\renewcommand{\algorithmcfname}{}
+	\begin{algorithm}[#1]%
+	}{
+\end{algorithm}
+}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\DeclareMathOperator{\Var}{\mathbb{V}ar}% variance
+\DeclareMathOperator{\sumk}{\sum_{k \ge 0}}
+
+\title{Analiza Algorytmów - Zadanie 21}
+\author{Janusz Witkowski 254663}
+\date{25 marca 2023}
 \begin{document}
     \maketitle
     
-    \textbf{Hello World!} Today I am learning \LaTeX. \LaTeX{} is a great program for writing math. I can write in line math such as $a^2+b^2=c^2$. I can also give equations their own space: \[ \gamma^2+\theta^2=\omega^2\]
-\end{document}
+    % \textbf{Hello World!} Today I am learning \LaTeX. \LaTeX{} is a great program for writing math. I can write in line math such as $a^2+b^2=c^2$. I can also give equations their own space: \[ \gamma^2+\theta^2=\omega^2\]
+
+    \section{Zadanie 21}
+    \subsection{Treść}
+    Rozważ następujący algorytm, z którego wywodzi się idea algorytmu HyperLogLog.
+
+    \begin{pseudokod}[H]
+    \SetArgSty{normalfont}
+    Initialization: $C \leftarrow 1$\\
+    \textbf{Upon event:}
+    \If{$random() <= 2^{-C}$}{
+        $C \leftarrow C + 1$
+    }
+    \textbf{end if}
+    \caption{Probabilistic Counter}
+    \end{pseudokod}
+
+    Innymi słowy, przy wystąpieniu zdarzenia rzucamy monetą $C$ razy i jeśli za każdym razem otrzymujemy reszkę zwiększamy licznik $C$ o jeden. W przeciwnym razie nie robimy nic.
+
+    Niech $C_n$ oznacza wartość przechowywaną w liczniku $C$ po zaobserwowaniu $n$ zdarzeń. Pokaż, że $\EX(2^{C_n}) = n + 2$ oraz $\Var(2^{C_n}) = \frac{1}{2}n(n+1)$. W oparciu o $C_n$ zdefiniuj nieobciążony estymator wartości $n$ i policz jego wariancję.
+
+    \subsection{Rozwiązanie}
+    \subsubsection{Wartość oczekiwana}
+    Pokażemy, że $\EX(2^{C_n}) = n + 2$, za pomocą indukcji po $n$. Dla $n = 0$, czyli przed zaobserwowaniem jakichkolwiek zjawisk, wartość licznika jest równa $C_n = C_0 = 1$, a więc wartość oczekiwana licznika wynosi
+
+    \[ \EX(2^{C_n}) = \EX(2^{C_0}) = \EX(2^1) = 2^1 = 2 = 0 + 2 = n + 2 \]
+
+    Teraz załóżmy, że $\EX(2^{C_n}) = n + 2$. Chcemy pokazać, że $\EX(2^{C_{n+1}}) = (n + 1) + 2 = n + 3$.
+    Możemy rozpisać tę wartość oczekiwaną:
+
+    \[ \EX(2^{C_{n+1}}) = \sumk \EX(2^{C_{n+1}} | C_n = k) \cdot Pr[C_n = k] = \sumk (\frac{1}{2^k} \cdot 2^{k+1} + (1 - \frac{1}{2^k}) \cdot 2^k) \cdot Pr[C_n = k] = \]
+
+    \[ = \sumk (2 + 2^k - 1) \cdot Pr[C_n = k] = \sumk (1 + 2^k) \cdot Pr[C_n = k] = \sumk Pr[C_n = k] + \sumk 2^k \cdot Pr[C_n = k] \]
+    
+    Łatwo stwierdzić że $\sumk Pr[C_n = k] = 1$, natomiast z definicji wartości oczekiwanej $\EX(2^{C_n}) = \sumk 2^k \cdot Pr[C_n = k]$. Stąd możemy podstawić:
+
+    \[ \EX(2^{C_n}) = 1 + \EX(2^{C_n}) = 1 + (n + 2) = n + 3 = (n + 1) + 2 \]
+
+    co kończy dowód indukcyjny.
+    \subsubsection{Wariancja}
+    Obliczymy wariancję z następującego wzoru: $\Var(2^{C_n}) = \EX[(2^{C_n})^2] - (\EX[2^{C_n}])^2$. Do policzenia wartości wariancji potrzeba nam wiedzieć ile wynosi $\EX[(2^{C_n})^2] = \EX[4^{C_n}]$.
+
+    Udowodnimy indykcyjnie po $n$, że $\EX(4^{C_n}) = \frac{3}{2}(n+1)(n+2) + 1$. Jasnym jest, że dla $n = 0$ mamy 
+    \[ \EX(4^{C_n}) = \EX(4^{C_0}) = \EX(4^1) = 4^1 = 4 = 3 + 1 = \frac{3}{2} \cdot 1 \cdot 2 + 1 = \frac{3}{2}(n+1)(n+2) + 1 \]
+
+    Teraz wprowadźmy założenie indykcyjne, ustalmy że chcemy dojść do postaci $\EX(4^{C_{n+1}}) = \frac{3}{2}(n+2)(n+3) + 1$ i zacznijmy rachować:
+
+    \[ \EX(4^{C_{n+1}}) = \sumk 4^k \cdot Pr[C_{n+1}=k] = \]
+
+    Zauważmy, że możemy podzielić prawdopodobieństwo wewnątrz sumy na dwie sytuacje - albo licznik miał tę wartość wcześniej, albo właśnie ją nabył:
+    
+    \[ = \sumk 4^k \cdot Pr[C_{n+1}=k | C_n=k] \cdot Pr[C_n=k] + \sumk 4^k \cdot Pr[C_{n+1}=k | C_n=k-1] \cdot Pr[C_n=k-1] = \]
+
+    \[ = \sumk 4^k (1 - \frac{1}{2^k}) Pr[C_n=k] + \sumk 4^k \frac{1}{2^{k-1}} Pr[C_n=k-1] = \]
+    
+    \[ = \sumk (4^k - 2^k) Pr[C_n=k] + \sumk 2 \cdot 2^k \cdot Pr[C_n=k-1] = \]
+
+    \[ = \sumk 4^k Pr[C_n=k] - \sumk 2^k Pr[C_n=k] + 2 \cdot 2 \sumk 2^{k-1} Pr[C_n=k-1] = \]
+
+    \[ = \EX(4^{C_n}) - \EX(2^{C_n}) + 4\EX(2^{C_n}) = \EX(4^{C_n}) + 3\EX(2^{C_n}) = \]
+
+    \[ = \frac{3}{2}(n+1)(n+2) + 3(n+2) = \frac{3}{2}(n+2)(n+3) + 1 \]
+
+    Mając wartość $\EX(4^{C_{n+1}})$ dowiedzioną indukcyjnie możemy obliczyć wariancję:
+
+    \[ \Var(2^{C_n}) = \frac{3}{2}(n+1)(n+2) - (n+2)^2 = \frac{1}{2}n(n+1) \]
+    \subsubsection{Nieobciążony estymator}
+    Zdefiniujmy następujący estymator wartości $n$:
+
+    \[ \hat{n} = 2^{C_n} - 2 \]
+
+    Estymator ten jest \textbf{nieobciążony}, ponieważ jego wartość oczekiwana jest dokładnie równa szacowanej wartości $n$:
+
+    \[ \EX(\hat{n}) = \EX(2^{C_n} - 2) = \EX(2^{C_n}) - 2 = (n + 2) - 2 = n \]
+
+    Do obliczenia wariancji tego estymatora możemy znów wykorzystać wzór $\Var(\hat{n}) = \EX[(\hat{n})^2] - (\EX[\hat{n}])^2$. Wartość oczekiwana estymatora jest nam znana, zatem znamy też wartość drugiej składowej. Policzmy pierwszą składową:
+
+    \[ \EX[(\hat{n})^2] = \EX[(2^{C_n}-2)^2] = \EX[4^{C_n} - 2 \cdot 2 \cdot 2^{C_n} + 4] = \]
+
+    \[ = \EX[4^{C_n}] - 4\EX[2^{C_n}] + \EX[4] = \frac{3}{2}(n+1)(n+2) - 4(n+2) + 4 = \frac{3}{2}n^2 + \frac{1}{2}n \]
+
+    Podstawiamy do wzoru na wariancję:
+
+    \[ \Var[\hat{n}] = \frac{3}{2}n^2 + \frac{1}{2}n - n^2 = \frac{1}{2}n(n+1) \]
+
+    \end{document}
