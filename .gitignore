@@ -1,2 +1,4 @@
 target/
 __pycache__/
+latex/output/*.aux
+latex/output/*.log

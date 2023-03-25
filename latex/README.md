@@ -1,0 +1,1 @@
+This subdirectory is intended for writing clean solutions for exercises from theoretical part of this course.
