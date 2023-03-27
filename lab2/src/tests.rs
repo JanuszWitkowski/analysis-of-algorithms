@@ -96,3 +96,6 @@ pub fn test_hashes(ns: &[usize]) {
 
     println!("Done running experiment 6.")
 }
+
+// task 7
+pub fn test_concentration (ns: &[usize])
