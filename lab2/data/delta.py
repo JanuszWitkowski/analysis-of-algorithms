@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from sys import argv
 from typing import List
-from math import sqrt
+from math import sqrt, exp, nextafter, inf
 
 def open_csv_for_numbers(filename: str) -> (List[int], List[float]):
     with open(filename, 'r') as file:
@@ -13,14 +13,32 @@ def open_csv_for_numbers(filename: str) -> (List[int], List[float]):
 def sort_ratios (ratios: List[float]) -> List[float]:
     return sorted(ratios, key=lambda x:x)
 
-def calculate_delta_czybyszew (k: int, alpha: float) -> float:
-    return sqrt(1 / (k * alpha))
-
 def calculate_variance (ratios: List[float], ev: float) -> float:
     sum = 0.0
     for r in ratios:
         sum += (r - ev)**2
     return sum / len(ratios)
+
+def calculate_delta_czybyszew (k: int, alpha: float) -> float:
+    return sqrt(1 / (k * alpha))
+
+def chernoff_help (delta: float, k: int):
+    fk = lambda arg: exp(arg * k) * ((1.0 - arg)**k)
+    eps1 = delta / (1.0 - delta)
+    eps2 = delta / (1.0 + delta)
+    return fk(eps2) + fk(-eps1)
+
+def calculate_delta_chernoff (k: int, alpha: float) -> float:
+    left = 0.0
+    right = 1.0
+    while left <= right:
+        mid = (left + right) / 2.0
+        res = chernoff_help(mid, k)
+        if res <= alpha:
+            right = nextafter(mid, 0.0)
+        else:
+            left = nextafter(mid, inf)
+    return left
 
 def calculate_delta_in_estimation (sorted_ratios: List[float], alpha: float) -> float:
     ln = len(sorted_ratios)
@@ -52,13 +70,21 @@ if __name__ == "__main__":
         delta1 = calculate_delta_in_estimation(sorted_ratios, alpha1)
         delta2 = calculate_delta_in_estimation(sorted_ratios, alpha2)
         delta3 = calculate_delta_in_estimation(sorted_ratios, alpha3)
-        print(f"alpha = {alpha1} | delta = {delta1}")
-        print(f"alpha = {alpha2} | delta = {delta2}")
-        print(f"alpha = {alpha3} | delta = {delta3}")
 
         delta_czybyszew_1 = calculate_delta_czybyszew(k, alpha1)
         delta_czybyszew_2 = calculate_delta_czybyszew(k, alpha2)
         delta_czybyszew_3 = calculate_delta_czybyszew(k, alpha3)
+
+        delta_chernoff1 = calculate_delta_chernoff(k, alpha1)
+        delta_chernoff2 = calculate_delta_chernoff(k, alpha2)
+        delta_chernoff3 = calculate_delta_chernoff(k, alpha3)
+
+        print(f"alpha = {alpha1} | delta = {delta1}")
         print(f"alpha = {alpha1} | czybyszew = {delta_czybyszew_1}")
+        print(f"alpha = {alpha1} | czernoff = {delta_chernoff1}")
+        print(f"alpha = {alpha2} | delta = {delta2}")
         print(f"alpha = {alpha2} | czybyszew = {delta_czybyszew_2}")
+        print(f"alpha = {alpha2} | czernoff = {delta_chernoff2}")
+        print(f"alpha = {alpha3} | delta = {delta3}")
         print(f"alpha = {alpha3} | czybyszew = {delta_czybyszew_3}")
+        print(f"alpha = {alpha3} | czernoff = {delta_chernoff3}")
