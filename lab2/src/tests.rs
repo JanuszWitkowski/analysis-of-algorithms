@@ -96,3 +96,21 @@ pub fn test_hashes(ns: &[usize]) {
 
     println!("Done running experiment 6.")
 }
+
+// task 6 BAD hash
+pub fn test_bad_hash(ns: &[usize]) {
+    println!("Running experiment 6 with bad hashes...");
+
+    let bytes_arr = [1, 2, 3, 4, 5, 6];
+    let filename = format!("results/bad6.csv");
+    let mut f = File::create(filename).unwrap();
+    writeln!(f, "b;mod256").unwrap();
+    for byte in bytes_arr {
+        println!("Running experiment for b = {} bits...", 8 * byte);
+        let bad_avg_diff = avg_dist(400, hashes::hash_bad_modulo, ns, byte);
+        println!("bad_avg_diff = {}", bad_avg_diff);
+        writeln!(f, "{};{}", byte*8, bad_avg_diff).unwrap();
+    }
+
+    println!("Done running experiment 6 with bad hashes.")
+}

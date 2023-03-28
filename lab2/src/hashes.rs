@@ -53,3 +53,7 @@ pub fn hash_sha3(n: usize, num_of_bytes: usize) -> f64 {
     let slice = res.as_slice();
     bytes_to_f64(slice, num_of_bytes)
 }
+
+pub fn hash_bad_modulo(n: usize, num_of_bytes: usize) -> f64 {
+    (n % 256) as f64
+}
