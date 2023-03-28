@@ -4,4 +4,3 @@ latex/output/*.aux
 latex/output/*.log
 help/
 *.tar
-lab2/data/*.png
