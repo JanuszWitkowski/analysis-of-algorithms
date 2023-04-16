@@ -1,24 +1,25 @@
 use crate::multiset::MultiSet;
 
 const N_OF_HASH_OUTPUT_BITS: usize = 32;
-const N_OF_HASH_OUTPUT_BYTES: usize = N_OF_HASH_OUTPUT_BITS / 8;
+// const N_OF_HASH_OUTPUT_BYTES: usize = N_OF_HASH_OUTPUT_BITS / 8;
 
-fn split_hash(hash_value: usize, hash_length: usize, n_of_bits: usize) -> (usize, usize) {
+pub fn split_hash(hash_value: usize, hash_length: usize, n_of_bits: usize) -> (usize, usize) {
     let tail_length = hash_length - n_of_bits;
     let left = hash_value >> tail_length;
     let right = hash_value % 2_usize.pow(tail_length as u32);
     (left, right)
 }
 
-fn rho(n: usize, length: usize) -> usize {
+pub fn rho(n: usize, length: usize) -> usize {
     let mut i = 1;
-    while i <= length && (n >> (length - i)) & 1 == 1 {
+    while i <= length && (n >> (length - i)) & 1 != 1 {
+        // println!("rho {}-{}-{} :: {:?}", n, length, length-i, (n >> (length - i)) & 1);
         i += 1;
     }
     i
 }
 
-fn alpha_m(m: usize) -> f64 {
+pub fn alpha_m(m: usize) -> f64 {
     match m {
         16 => 0.673,
         32 => 0.697,
@@ -31,7 +32,7 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
     let m: usize = 2_usize.pow(bits as u32);
     let mut m_arr = vec![0; m];
     for x in multiset {
-        let hx = h(x, N_OF_HASH_OUTPUT_BYTES);
+        let hx = h(x, N_OF_HASH_OUTPUT_BITS);
         let (j, w) = split_hash(hx, N_OF_HASH_OUTPUT_BITS, bits);
         // let j = 1 + jminus1;
         let r = rho(w, N_OF_HASH_OUTPUT_BITS);
