@@ -37,6 +37,18 @@ pub fn test_estimator(ns: &[usize]) {
     }
 }
 
+pub fn test_estimator_for_hash(ns: &[usize], k: usize, hash: fn(usize, usize) -> f64, hashname: &'static str) {
+    let filename = format!("results/mincount_{}_k{}.csv", hashname, k);
+    let mut f = File::create(filename).unwrap();
+    let bits = 5;
+    for &n in ns {
+        let m = multiset::MultiSet::new(n);
+        let n_est = mincount::mincount(m, hash, k, bits);
+        let n = n as f64;
+        writeln!(f, "{};{};{}", n, n_est as f64, n_est as f64 / n).unwrap();
+    }
+}
+
 // task 5c
 pub fn test_best_k(ns: &[usize], min_count: usize) {
     let mut left = 2;
@@ -52,6 +64,7 @@ pub fn test_best_k(ns: &[usize], min_count: usize) {
             left = mid + 1;
         }
     }
+    let filename = format!("results/5c.txt");
     let mut f = File::create(filename).unwrap();
     println!("k = {}", left);
     writeln!(f, "{}", left).unwrap();

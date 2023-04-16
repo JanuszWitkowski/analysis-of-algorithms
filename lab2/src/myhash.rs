@@ -6,12 +6,17 @@ use sha2::Sha256; // 256 bits
 use sha3::Sha3_256; // 256 bits 
 
 fn bytes_to_f64(bytes: &[u8], num_of_bytes: usize) -> f64 {
-    let mut sum = 0.0;
-    for &byte in bytes.iter().take(num_of_bytes) {
-        sum += byte as f64;
-        sum /= 256.0;
+    // let mut sum = 0.0;
+    // for &byte in bytes.iter().take(num_of_bytes) {
+    //     sum += byte as f64;
+    //     sum /= 256.0;
+    // }
+    // sum
+    let mut sum = 0;
+    for &byte in bytes.iter() {
+        sum = (sum + (byte as usize)) % (num_of_bytes * 8);
     }
-    sum
+    sum as f64
 }
 
 pub fn hash_blake2(n: usize, num_of_bytes: usize) -> f64 {
