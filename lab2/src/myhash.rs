@@ -11,8 +11,9 @@ fn bytes_to_f64(bytes: &[u8], num_of_bytes: usize) -> f64 {
         sum += byte as f64;
         sum /= 256.0;
     }
-    println!("{:?}", sum);
+    // println!("{:?}", sum);
     sum
+
     // let mut sum = 0;
     // let modulant = (2_usize.pow(num_of_bytes as u32)).pow(num_of_bytes as u32);
     // for &byte in bytes.iter() {
@@ -21,6 +22,14 @@ fn bytes_to_f64(bytes: &[u8], num_of_bytes: usize) -> f64 {
     // }
     // // println!("{:?}", 2_usize.pow(num_of_bytes as u32));
     // println!("{:?}", sum);
+    // sum as f64
+
+    // let mut sum = 0;
+    // let modulant = 2_usize.pow(2_u32.pow(num_of_bytes as u32));
+    // for &byte in bytes.iter().rev() {
+    //     sum = (sum * 256 + (byte as usize)) % modulant;
+    // }
+    // // println!("{:?}", sum);
     // sum as f64
 }
 

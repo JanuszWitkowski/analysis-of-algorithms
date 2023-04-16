@@ -13,7 +13,6 @@ pub fn split_hash(hash_value: usize, hash_length: usize, n_of_bits: usize) -> (u
 pub fn rho(n: usize, length: usize) -> usize {
     let mut i = 1;
     while i <= length && (n >> (length - i)) & 1 != 1 {
-        // println!("rho {}-{}-{} :: {:?}", n, length, length-i, (n >> (length - i)) & 1);
         i += 1;
     }
     i
@@ -24,7 +23,7 @@ pub fn alpha_m(m: usize) -> f64 {
         16 => 0.673,
         32 => 0.697,
         64 => 0.709,
-        m_ => 0.7213/(1.0 + (1.079/(m_ as f64))),
+        _ => 0.7213/(1.0 + (1.079/(m as f64))),
     }
 }
 
@@ -36,19 +35,24 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
         let (j, w) = split_hash(hx, N_OF_HASH_OUTPUT_BITS, bits);
         // let j = 1 + jminus1;
         let r = rho(w, N_OF_HASH_OUTPUT_BITS);
+        // println!("j={:?}, w={:?}, r={:?}", j, w, r);
         if m_arr[j] < r {
             m_arr[j] = r;
+            // println!("j={:?}, w={:?}, r={:?}", j, w, r);
         }
     }
-    let n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|x| 2.0_f64.powf(-(*x as f64))).sum::<f64>()).powf(-1.0);
-    if n_est < 2.5 * (m as f64) {
+    // println!("{:?}", m_arr);
+    // println!("{:?}, {:?}, {:?}, {:?}", m, alpha_m(m), (m as f64).powf(2.0), (m_arr.iter().map(|x| 2.0_f64.powf(-(*x as f64))).sum::<f64>()).powf(-1.0));
+    let n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).sum::<f64>()).powf(-1.0);
+    if n_est <= 2.5 * (m as f64) {
         let v = m_arr.iter().filter(|&x| *x == 0).count();
         if v != 0 {
-            return (m as f64) * ((m as f64) / (v as f64)).log2();
+            return (m as f64) * (((m as f64) / (v as f64)).log2());
+            // return (-(m as f64)) * (((v as f64) / (m as f64)).log2());
         }
     } else if 30.0 * n_est > 2.0_f64.powf(32.0) {
         let huge: f64 = 2.0_f64.powf(32.0);
-        return (-huge) * (1.0 - (n_est / huge)).log2();
+        return (-huge) * ((1.0 - (n_est / huge)).log2());
     }
     return n_est;
 }

@@ -6,11 +6,27 @@ use sha2::Sha256; // 256 bits
 use sha3::Sha3_256; // 256 bits 
 
 fn shorten_hash(bytes: &[u8], num_of_bits: usize) -> usize {
+    // let mut sum = 0;
+    // let modulant = 2_u64.pow(num_of_bits as u64);
+    // for &byte in bytes.iter() {
+    //     sum = (sum + (byte as usize)) % modulant;
+    // }
+    // // println!("{:?}", sum);
+    // sum
     let mut sum = 0;
-    for &byte in bytes.iter() {
-        sum = (sum + (byte as usize)) % num_of_bits;
+    for &byte in bytes.iter().take(num_of_bits/8) {
+        sum *= 256;
+        sum += byte as usize;
     }
+    // println!("{:?}", sum);
     sum
+    // let mut sum = 0;
+    // let modulant = 2_usize.pow(num_of_bits as u32);
+    // for &byte in bytes.iter().rev() {
+    //     sum = (sum * 256 + (byte as usize)) % modulant;
+    // }
+    // // println!("{:?}", sum);
+    // sum
 }
 
 pub fn hash_blake2(n: usize, num_of_bits: usize) -> usize {
