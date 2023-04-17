@@ -1,4 +1,5 @@
 use crate::multiset::MultiSet;
+use std::cmp::max;
 
 const N_OF_HASH_OUTPUT_BITS: usize = 32;
 // const N_OF_HASH_OUTPUT_BYTES: usize = N_OF_HASH_OUTPUT_BITS / 8;
@@ -34,25 +35,27 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
         let hx = h(x, N_OF_HASH_OUTPUT_BITS);
         let (j, w) = split_hash(hx, N_OF_HASH_OUTPUT_BITS, bits);
         // let j = 1 + jminus1;
-        let r = rho(w, N_OF_HASH_OUTPUT_BITS);
+        // let r = rho(w, N_OF_HASH_OUTPUT_BITS);
         // println!("j={:?}, w={:?}, r={:?}", j, w, r);
-        if m_arr[j] < r {
-            m_arr[j] = r;
-            // println!("j={:?}, w={:?}, r={:?}", j, w, r);
-        }
+        // if m_arr[j] < r {
+        //     m_arr[j] = r;
+        //     // println!("j={:?}, w={:?}, r={:?}", j, w, r);
+        // }
+        m_arr[j] = max(m_arr[j], rho(w, N_OF_HASH_OUTPUT_BITS));
     }
     // println!("{:?}", m_arr);
     // println!("{:?}, {:?}, {:?}, {:?}", m, alpha_m(m), (m as f64).powf(2.0), (m_arr.iter().map(|x| 2.0_f64.powf(-(*x as f64))).sum::<f64>()).powf(-1.0));
-    let n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).sum::<f64>()).powf(-1.0);
+    let mut n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).sum::<f64>()).powf(-1.0);
     if n_est <= 2.5 * (m as f64) {
         let v = m_arr.iter().filter(|&x| *x == 0).count();
         if v != 0 {
-            return (m as f64) * (((m as f64) / (v as f64)).log2());
+            n_est = (m as f64) * (((m as f64) / (v as f64)).ln());
             // return (-(m as f64)) * (((v as f64) / (m as f64)).log2());
         }
-    } else if 30.0 * n_est > 2.0_f64.powf(32.0) {
-        let huge: f64 = 2.0_f64.powf(32.0);
-        return (-huge) * ((1.0 - (n_est / huge)).log2());
+    } 
+    let huge: f64 = 2.0_f64.powf(32.0);
+    if 30.0 * n_est > huge {
+        n_est = (-huge) * ((1.0 - (n_est / huge)).ln());
     }
     return n_est;
 }
