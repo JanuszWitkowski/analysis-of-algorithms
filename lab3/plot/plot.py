@@ -92,7 +92,7 @@ if __name__ == "__main__":
         #     title = proper_name(filename)
         #     ns, ests, ratios = open_csv_for_numbers(filename)
         #     plot_simple(title, ns, ratios)
-        plot_simple_multiple("HyperLogLog_vs_MinCount", filenames)
+        plot_simple_multiple("HyperLogLog_vs_MinCount_v2", filenames)
     elif len(argv) > 1:
         filename = argv[1]
         if "6.csv" in filename:

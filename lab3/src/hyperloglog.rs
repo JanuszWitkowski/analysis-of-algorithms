@@ -45,7 +45,19 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
     }
     // println!("{:?}", m_arr);
     // println!("{:?}, {:?}, {:?}, {:?}", m, alpha_m(m), (m as f64).powf(2.0), (m_arr.iter().map(|x| 2.0_f64.powf(-(*x as f64))).sum::<f64>()).powf(-1.0));
+    // println!("{:?}", m_arr);
     let mut n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).sum::<f64>()).powf(-1.0);
+    let alpha = alpha_m(m);
+    let m2 = (m as f64).powf(2.0);
+    let mut weird_vec = m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).collect::<Vec<f64>>();
+    let weird_sum = weird_vec.iter().sum::<f64>();
+    let actual_sum = weird_sum.powf(-1.0);
+    let mut n_est = alpha * m2 * actual_sum;
+    println!("alfa={:?}, m^2={:?}, weird_sum={:?}, actual_sum={:?}", alpha, m2, weird_sum, actual_sum);
+    println!("{:?}", m_arr);
+    println!("{:?}", weird_vec);
+    println!();
+
     if n_est <= 2.5 * (m as f64) {
         let v = m_arr.iter().filter(|&x| *x == 0).count();
         if v != 0 {
