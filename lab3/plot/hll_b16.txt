@@ -1,0 +1,9 @@
+Given file: ../results/hll/results/hyperloglog_blake2_b16.csv
+EV = 0.9999631024115925
+Var = 7.795160594771867e-06
+alpha = 0.05 | delta = 0.005447767314650798
+alpha = 0.05 | czybyszew = 0.22360679774997896
+alpha = 0.01 | delta = 0.007280002891483894
+alpha = 0.01 | czybyszew = 0.5
+alpha = 0.005 | delta = 0.008005539365273151
+alpha = 0.005 | czybyszew = 0.7071067811865476

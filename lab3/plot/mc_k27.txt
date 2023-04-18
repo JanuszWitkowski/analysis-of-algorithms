@@ -1,0 +1,9 @@
+Given file: ../results/mc/results/mincount_blake2_k27.csv
+EV = 0.9996539714299004
+Var = 0.03906910716607631
+alpha = 0.05 | delta = 0.37914073516335356
+alpha = 0.05 | czybyszew = 0.22360679774997896
+alpha = 0.01 | delta = 0.5769006590019681
+alpha = 0.01 | czybyszew = 0.5
+alpha = 0.005 | delta = 0.6457201612051444
+alpha = 0.005 | czybyszew = 0.7071067811865476
