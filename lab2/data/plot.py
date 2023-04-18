@@ -16,7 +16,7 @@ def proper_name (filename: str) -> str:
         return name
     return name[-idx+1:]
 
-def open_csv_for_numbers(filename: str) -> (List[int], List[float]):
+def open_csv_for_numbers(filename: str) -> Tuple[List[int], List[float]]:
     with open(filename, 'r') as file:
         lines = [line.split(';') for line in file]
     ns = [int(line[0]) for line in lines]
