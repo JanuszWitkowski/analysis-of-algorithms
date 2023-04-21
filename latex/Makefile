@@ -1,4 +1,4 @@
-TEXFILE="ex21.tex"
+TEXFILE="ex24.tex"
 
 all: pdf clean
 

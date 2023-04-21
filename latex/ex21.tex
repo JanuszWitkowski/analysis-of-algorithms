@@ -56,16 +56,20 @@
     Pokażemy, że $\EX(2^{C_n}) = n + 2$, za pomocą indukcji po $n$. Dla $n = 0$, czyli przed zaobserwowaniem jakichkolwiek zjawisk, wartość licznika jest równa $C_n = C_0 = 1$, a więc wartość oczekiwana licznika wynosi
 
     \begin{equation}
-    \[ \EX(2^{C_n}) = \EX(2^{C_0}) = \EX(2^1) = 2^1 = 2 = 0 + 2 = n + 2 \]
+    \EX(2^{C_n}) = \EX(2^{C_0}) = \EX(2^1) = 2^1 = 2 = 0 + 2 = n + 2
     \end{equation}
 
     Teraz załóżmy, że $\EX(2^{C_n}) = n + 2$. Chcemy pokazać, że $\EX(2^{C_{n+1}}) = (n + 1) + 2 = n + 3$.
     Możemy rozpisać tę wartość oczekiwaną:
 
-    \[ \EX(2^{C_{n+1}}) = \sumk \EX(2^{C_{n+1}} | C_n = k) \cdot Pr[C_n = k] = \sumk (\frac{1}{2^k} \cdot 2^{k+1} + (1 - \frac{1}{2^k}) \cdot 2^k) \cdot Pr[C_n = k] = \]
+    \begin{equation}
+    \EX(2^{C_{n+1}}) = \sumk \EX(2^{C_{n+1}} | C_n = k) \cdot Pr[C_n = k] = \sumk (\frac{1}{2^k} \cdot 2^{k+1} + (1 - \frac{1}{2^k}) \cdot 2^k) \cdot Pr[C_n = k] =
+    \end{equation}
 
-    \[ = \sumk (2 + 2^k - 1) \cdot Pr[C_n = k] = \sumk (1 + 2^k) \cdot Pr[C_n = k] = \sumk Pr[C_n = k] + \sumk 2^k \cdot Pr[C_n = k] \]
-    
+    \begin{equation}
+    = \sumk (2 + 2^k - 1) \cdot Pr[C_n = k] = \sumk (1 + 2^k) \cdot Pr[C_n = k] = \sumk Pr[C_n = k] + \sumk 2^k \cdot Pr[C_n = k]
+    \end{equation}
+
     Łatwo stwierdzić że $\sumk Pr[C_n = k] = 1$, natomiast z definicji wartości oczekiwanej $\EX(2^{C_n}) = \sumk 2^k \cdot Pr[C_n = k]$. Stąd możemy podstawić:
 
     \[ \EX(2^{C_n}) = 1 + \EX(2^{C_n}) = 1 + (n + 2) = n + 3 = (n + 1) + 2 \]

@@ -1,0 +1,85 @@
+\documentclass{article} 
+
+% NIE UŻYWAĆ BABELA!!
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[MeX]{polski}
+\usepackage{mathtools}
+% \usepackage{amssymb}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+% \parindent=0pt % disables indentation
+% \setlength{\hoffset}{-7.4mm}
+\setlength{\oddsidemargin}{10mm}
+\setlength{\evensidemargin}{4mm}
+\setlength{\textwidth}{140mm}
+
+\usepackage[ruled,vlined,linesnumbered,longend]{algorithm2e}
+\newenvironment{pseudokod}[1][htb]{
+	\renewcommand{\algorithmcfname}{}
+	\begin{algorithm}[#1]%
+	}{
+\end{algorithm}
+}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\DeclareMathOperator{\Var}{\mathbb{V}ar}% variance
+\DeclareMathOperator{\sumk}{\sum_{k \ge 0}}
+
+\title{Analiza Algorytmów - Zadanie 24}
+\author{Janusz Witkowski 254663}
+\date{21 kwietnia 2023}
+\begin{document}
+    \maketitle
+    
+    % \textbf{Hello World!} Today I am learning \LaTeX. \LaTeX{} is a great program for writing math. I can write in line math such as $a^2+b^2=c^2$. I can also give equations their own space: \[ \gamma^2+\theta^2=\omega^2\]
+
+    \section{Zadanie 24}
+    \subsection{Treść}
+    Niech $X$ i $Y$ będą niezależnymi zmiennymi losowymi o funkcjach gęstości odpowiednio $f_X(x)$ oraz $f_Y(y)$. Dla $Z = X + Y$ pokaż, że
+
+    \[ f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_X(x)f_Y(z - x) \,dx \]
+
+    Jaki związek ma to zadanie z następnym zadaniem?
+
+    \textit{Wskazówka:} zobacz \href{https://en.wikipedia.org/wiki/Convolution_of_probability_distributions}{splot rozkładów prawdopodobieństwa}. 
+
+
+    \subsection{Rozwiązanie}
+    \subsubsection{Splot rozkładów}
+
+    N
+
+    \subsubsection{Wyprowadzenie wzoru}
+
+    Ze strony na Wikipedii o splocie rozkładów prawdopodobieństwa (dołączonej do wskazówki w treści zadania) możemy wyciągnąć ogólny wzór na rozkład złożonej z dwóch
+    niezależnych zmiennych losowych $X$ i $Y$ zmiennej losowej $Z = X + Y$:
+
+    \begin{equation}
+        P(Z=z) = \sum_{k=-\infty}^{\infty}{P(X=k)P(Y=z-k)}
+    \end{equation}
+
+    Dla dowolnych zmiennych losowych $X$ i $Y$ oraz $Z = X + Y$ mamy
+
+    \begin{equation}
+        f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_{XY}(x,z-x) \,dx 
+    \end{equation}
+
+    Ale $X$ i $Y$ są niezależne, więc
+
+    \begin{equation}
+        f_{XY}(x,y)=f_X(x)f_Y(y)
+    \end{equation}
+
+    Stąd wychodzi nam oczekiwany wzór
+
+    \begin{equation}
+        f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_X(x)f_Y(z-x) \,dx 
+    \end{equation}
+
+
+    \subsubsection{Powiązanie z Zadaniem 25}
+
+    W zadaniu 25 można wykorzystać pokazaną wyżej własność w dowodzie indukcyjnym. Idea jest taka, by dla zmiennej losowej w danym kroku indukcyjnym 
+    policzyć gęstość za pomocą splotu rozkładu zmiennej losowej będącej sumą poprzedniej zmiennej losowej oraz następnej zmiennej losowej.
+
+    \end{document}
