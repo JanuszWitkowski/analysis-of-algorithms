@@ -51,42 +51,48 @@
     która odpowiada dodawaniu niezależnych zmiennych losowych, a co za tym idzie, tworzeniu liniowych kombinacji zmiennych losowych. 
     Operacja ta jest szczególnym przypadkiem splotu w kontekście rozkładów prawdopodobieństwa.
 
-    Rozkład prawdopodobieństwa sumy dwóch lub więcej niezależnych zmiennych losowych jest splotem ich indywidualnych rozkładów. 
-    Jest to tłumaczone faktem, że funkcja gęstości prawdopodobieństwa (funkcja masy prawdopodobieństwa w przypadku dyskretnym) sumy niezależnych zmiennych losowych 
-    jest splotem odpowiadających im funkcji gęstości prawdopodobieństwa (funkcji mas prawdopodobieństwa w przypadku dyskretnym). 
+    % Rozkład prawdopodobieństwa sumy dwóch lub więcej niezależnych zmiennych losowych jest splotem ich indywidualnych rozkładów. 
+    % Jest to tłumaczone faktem, że funkcja gęstości prawdopodobieństwa (funkcja masy prawdopodobieństwa w przypadku dyskretnym) sumy niezależnych zmiennych losowych 
+    % jest splotem odpowiadających im funkcji gęstości prawdopodobieństwa (funkcji mas prawdopodobieństwa w przypadku dyskretnym). 
     % Wiele dobrze znanych rozkładów ma proste sploty.
 
     \subsubsection{Wyprowadzenie wzoru}
 
-    Ze strony na Wikipedii o splocie rozkładów prawdopodobieństwa (dołączonej do wskazówki w treści zadania) możemy wyciągnąć ogólny wzór na rozkład złożonej z dwóch
-    dyskretnych zmiennych losowych $X$ i $Y$ zmiennej losowej $Z = X + Y$:
+    % Ze strony na Wikipedii o splocie rozkładów prawdopodobieństwa (dołączonej do wskazówki w treści zadania) możemy wyciągnąć ogólny wzór na rozkład złożonej z dwóch
+    % dyskretnych zmiennych losowych $X$ i $Y$ zmiennej losowej $Z = X + Y$:
+
+    % \begin{equation}
+    %     P(Z=z) = P(X+Y=z) = P(X=k \land Y=z-k , k\in \mathbb{Z}) = \sum_{k=-\infty}^{\infty}{P(X=k \land Y=z-k)}
+    % \end{equation}
+
+    % Jeśli $X$ i $Y$ są niezależne, to
+
+    % \begin{equation}
+    %     P(Z=z) = \sum_{k=-\infty}^{\infty}{P(X=k \land Y=z-k)} = \sum_{k=-\infty}^{\infty}{P(X=k)P(Y=z-k)}
+    % \end{equation}
+
+    % Przyjrzyjmy się teraz ciągłym rozkładom. Dla dowolnych ciągłych zmiennych losowych $X$ i $Y$ oraz $Z = X + Y$ mamy
+
+    % \begin{equation}
+    %     f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_{XY}(x,z-x) \,dx 
+    % \end{equation}
+
+    % gdzie $f_{XY}$ jest \textit{funkcją wspólnej gęstości (joint probability density function)}, a przez $f_{XY}(x,z-x)$ rozumieć będziemy
+    % gęstość prawdopodobieństwa tego że $X=x \land Y=z-x$ dla danego $x\in \mathbb{R}$. 
+
+    % W zadaniu zakładamy, że $X$ i $Y$ są niezależne, z czego wynika (jak w przypadku dyskretnym)
+
+    % \begin{equation}
+    %     f_{XY}(x,y)=f_X(x)f_Y(y)
+    % \end{equation}
+
+    \textbf{Przypomnienie:} Jeżeli $Z$ jest zmienną losową ciągłą z funkcją gęstości $f_Z$ i dystrybuantą $F_Z$, to 
+    \[ f_Z(z) = F_Z'(z) \]
+
+    Policzmy dystrybuantę zmiennej losowej $Z$:
 
     \begin{equation}
-        P(Z=z) = P(X+Y=z) = P(X=k \land Y=z-k , k\in \mathbb{Z}) = \sum_{k=-\infty}^{\infty}{P(X=k \land Y=z-k)}
     \end{equation}
-
-    Jeśli $X$ i $Y$ są niezależne, to
-
-    \begin{equation}
-        P(Z=z) = \sum_{k=-\infty}^{\infty}{P(X=k \land Y=z-k)} = \sum_{k=-\infty}^{\infty}{P(X=k)P(Y=z-k)}
-    \end{equation}
-
-    Przyjrzyjmy się teraz ciągłym rozkładom. Dla dowolnych ciągłych zmiennych losowych $X$ i $Y$ oraz $Z = X + Y$ mamy
-
-    \begin{equation}
-        f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_{XY}(x,z-x) \,dx 
-    \end{equation}
-
-    gdzie $f_{XY}$ jest \textit{funkcją wspólnej gęstości (joint probability density function)}, a przez $f_{XY}(x,z-x)$ rozumieć będziemy
-    gęstość prawdopodobieństwa tego że $X=x \land Y=z-x$ dla danego $x\in \mathbb{R}$. 
-
-    W zadaniu zakładamy, że $X$ i $Y$ są niezależne, z czego wynika (jak w przypadku dyskretnym)
-
-    \begin{equation}
-        f_{XY}(x,y)=f_X(x)f_Y(y)
-    \end{equation}
-
-    Stąd wychodzi nam oczekiwany wzór
 
     \begin{equation}
         f_Z(z) = \int\displaylimits_{-\infty}^{\infty} f_X(x)f_Y(z-x) \,dx 
