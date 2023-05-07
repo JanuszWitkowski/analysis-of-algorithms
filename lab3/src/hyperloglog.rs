@@ -52,10 +52,12 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
     let mut weird_vec = m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).collect::<Vec<f64>>();
     let weird_sum = weird_vec.iter().sum::<f64>();
     let actual_sum = weird_sum.powf(-1.0);
-    let mut n_est = alpha * m2 * actual_sum;
+    let mut n_est2 = alpha * m2 * actual_sum;
     println!("alfa={:?}, m^2={:?}, weird_sum={:?}, actual_sum={:?}", alpha, m2, weird_sum, actual_sum);
     println!("{:?}", m_arr);
     println!("{:?}", weird_vec);
+    println!("n_est1: {:?}", n_est);
+    println!("n_est2: {:?}", n_est2);
     println!();
 
     if n_est <= 2.5 * (m as f64) {
