@@ -99,13 +99,15 @@ fn calculate_qs() -> Vec<f64> {
     (1..32).map(|x| (x as f64)/64.0).collect::<Vec<f64>>()
 }
 
-fn binary_searches(p: f64, q: f64, mut left: usize, mut right: usize) -> (usize, usize) {
+fn binary_searches(p: f64, q: f64, l: usize, r: usize) -> (usize, usize) {
+    let (mut left, mut right) = (l, r);
     let mut mid = 0;
     let mut result;
     // Nakamuto
     while left < right {
         mid = (left + right) / 2;
         result = theory::nakamuto(q, mid);
+        // println!("[N](p={} | q={} | mid={}) result={}", p, q, mid, result);
         if result <= p {
             right = mid;
         } else {
@@ -114,10 +116,12 @@ fn binary_searches(p: f64, q: f64, mut left: usize, mut right: usize) -> (usize,
     }
     let n_nakamuto = mid;
     // Grunspan
+    (left, right) = (l, r);
     while left < right {
         mid = (left + right) / 2;
         result = theory::grunspan(q, mid);
-        if result >= p {
+        // println!("[G](p={} | q={} | mid={}) result={}", p, q, mid, result);
+        if result <= p {
             right = mid;
         } else {
             left = mid + 1;
