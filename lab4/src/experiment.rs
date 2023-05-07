@@ -19,7 +19,7 @@ const MSG_SIM:      &str = "Done with double-spending simulation for n = ";
 const N_FIXED_P_LEFT:           usize = 1;
 const N_FIXED_P_RIGHT:          usize = 220;
 const NUMBER_OF_SIMULATIONS:    usize = 100_000;
-const THRESHOLD:                usize = 30;
+const THRESHOLD:                usize = 128;
 
 
 pub fn theory_fixed_n() {
