@@ -1,32 +1,32 @@
 pub fn nakamuto(q: f64, n: usize) -> f64 {
-    let p = 1.0 - q;
-    let lambda = (n as f64) * (q / p);
-    let exp_minus_lambda = (- lambda).exp();
-    let mut curr_fact = 1.0;
-    let mut sum = 1.0;
-    let (mut temp1, mut temp3);
-    for k in 0..n {
-        if k != 0 {     // TODO: poprawić bo to śmieszne jest xD
-            curr_fact *= k as f64;
-        }
-        temp1 = lambda.powf(k as f64) * exp_minus_lambda / curr_fact;
-        temp3 = (q / p).powf((n - k) as f64);
-        sum -= temp1 * (1.0 - temp3);
-    }
-    sum
     // let p = 1.0 - q;
     // let lambda = (n as f64) * (q / p);
     // let exp_minus_lambda = (- lambda).exp();
     // let mut curr_fact = 1.0;
-    // let mut sum = 0.0;
-    // let (mut poisson, mut prob);
+    // let mut sum = 1.0;
+    // let (mut temp1, mut temp3);
     // for k in 0..n {
-    //     poisson = lambda.powf(k as f64);
-    //     prob = (q / p).powf((n - k) as f64);
-    //     sum += poisson * (1.0 - prob) / curr_fact;
-    //     curr_fact *= (k+1) as f64;
+    //     if k != 0 {     // TODO: poprawić bo to śmieszne jest xD
+    //         curr_fact *= k as f64;
+    //     }
+    //     temp1 = lambda.powf(k as f64) * exp_minus_lambda / curr_fact;
+    //     temp3 = (q / p).powf((n - k) as f64);
+    //     sum -= temp1 * (1.0 - temp3);
     // }
-    // 1.0 - exp_minus_lambda * sum
+    // sum
+    let p = 1.0 - q;
+    let lambda = (n as f64) * (q / p);
+    let exp_minus_lambda = (- lambda).exp();
+    let mut curr_fact = 1.0;
+    let mut sum = 0.0;
+    let (mut poisson, mut prob);
+    for k in 0..n {
+        poisson = lambda.powf(k as f64);
+        prob = (q / p).powf((n - k) as f64);
+        sum += poisson * (1.0 - prob) / curr_fact;
+        curr_fact *= (k+1) as f64;
+    }
+    1.0 - exp_minus_lambda * sum
 }
 
 pub fn grunspan(q: f64, n: usize) -> f64 {
