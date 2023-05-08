@@ -28,6 +28,14 @@ pub fn alpha_m(m: usize) -> f64 {
     }
 }
 
+pub fn register_sum(m_arr: Vec<usize>) -> f64 {
+    let mut sum = 0.0;
+    for mj in m_arr {
+        sum += 2.0_f64.powf(-(mj as f64));
+    }
+    sum
+}
+
 pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize) -> f64 {
     let m: usize = 2_usize.pow(bits as u32);
     let mut m_arr = vec![0; m];
@@ -47,18 +55,24 @@ pub fn hyperloglog(multiset: MultiSet, h: fn(usize, usize) -> usize, bits: usize
     // println!("{:?}, {:?}, {:?}, {:?}", m, alpha_m(m), (m as f64).powf(2.0), (m_arr.iter().map(|x| 2.0_f64.powf(-(*x as f64))).sum::<f64>()).powf(-1.0));
     // println!("{:?}", m_arr);
     let mut n_est: f64 = alpha_m(m) * (m as f64).powf(2.0) * (m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).sum::<f64>()).powf(-1.0);
-    let alpha = alpha_m(m);
-    let m2 = (m as f64).powf(2.0);
-    let mut weird_vec = m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).collect::<Vec<f64>>();
-    let weird_sum = weird_vec.iter().sum::<f64>();
-    let actual_sum = weird_sum.powf(-1.0);
-    let mut n_est2 = alpha * m2 * actual_sum;
-    println!("alfa={:?}, m^2={:?}, weird_sum={:?}, actual_sum={:?}", alpha, m2, weird_sum, actual_sum);
-    println!("{:?}", m_arr);
-    println!("{:?}", weird_vec);
-    println!("n_est1: {:?}", n_est);
-    println!("n_est2: {:?}", n_est2);
-    println!();
+
+        let alpha = alpha_m(m);
+        let m2 = (m as f64).powf(2.0);
+        let mut weird_vec = m_arr.iter().map(|&x| 2.0_f64.powf(-(x as f64))).collect::<Vec<f64>>();
+        let weird_sum = weird_vec.iter().sum::<f64>();
+        let weird_sum3 = register_sum(m_arr.clone());
+        let actual_sum = weird_sum.powf(-1.0);
+        let actual_sum3 = weird_sum3.powf(-1.0);
+        let mut n_est2 = alpha * m2 * actual_sum;
+        let mut n_est3 = alpha * m2 * actual_sum3;
+        println!("alfa={:?}, m^2={:?}, weird_sum={:?}, actual_sum={:?}", alpha, m2, weird_sum, actual_sum);
+        println!("weird_sum3={:?}, actual_sum3={:?}", weird_sum3, actual_sum3);
+        println!("{:?}", m_arr);
+        println!("{:?}", weird_vec);
+        println!("n_est1: {:?}", n_est);
+        println!("n_est2: {:?}", n_est2);
+        println!("n_est3: {:?}", n_est3);
+        println!();
 
     if n_est <= 2.5 * (m as f64) {
         let v = m_arr.iter().filter(|&x| *x == 0).count();
