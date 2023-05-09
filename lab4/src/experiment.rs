@@ -82,9 +82,8 @@ pub fn double_spending_simulator() {
             // MONTE CARLO
             result = 0.0;
             for _ in 0..NUMBER_OF_SIMULATIONS {
-                // if double_spending(*q, n, THRESHOLD) {
-                if double_spending(*q, n, THRESHOLD * n) {
-                // if double_spending(*q, n, THRESHOLD-n) {
+                if double_spending(*q, n, THRESHOLD) {
+                // if double_spending(*q, n, THRESHOLD * n) {
                     result += 1.0;
                 }
             }
