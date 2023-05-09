@@ -24,6 +24,7 @@ pub fn test_estimator_for_hash(ns: &[usize], bits: usize, hash: fn(usize, usize)
         let n_est = hyperloglog::hyperloglog(m, hash, bits);
         let n = n as f64;
         writeln!(f, "{};{};{}", n, n_est, n_est / n).unwrap();
+        println!("Done with {} for n={}", hashname, n);
     }
     println!("Done for {} b={}.", hashname, bits);
 }

@@ -13,13 +13,41 @@ fn shorten_hash(bytes: &[u8], num_of_bits: usize) -> usize {
     // }
     // // println!("{:?}", sum);
     // sum
-    let mut sum = 0;
-    for &byte in bytes.iter().take(num_of_bits/8) {
-        sum *= 256;
-        sum += byte as usize;
+
+    // WEŹ KILKA PIERWSZYCH BAJTÓW
+    // let mut sum = 0;
+    // for &byte in bytes.iter().take(num_of_bits/8) {
+    //     // sum *= 256;
+    //     sum <<= 8;
+    //     sum += byte as usize;
+    // }
+    // println!("HASH: {:b}", sum);
+    // sum
+
+    // SUMA MODULOWA
+    // let mut sum: u64 = 0;
+    // let modulant = 2_u64.pow(32);
+    // let mut counter = 0;
+    // for &byte in bytes.iter() {
+    //     counter += 1;
+    //     sum = (sum + (byte as u64)) % modulant;
+    //     // println!("byte: {}; sum: {}", byte, sum);
+    // }
+    // // println!("({})HASH: {:b}", counter, sum);
+    // sum as usize
+
+    // JUST MODULO
+    let mut sum: u128 = 0;
+    // let modulant = 2_u128.pow(32);
+    let modulant = 2_u128.pow((num_of_bits as u64).try_into().unwrap());
+    for &byte in bytes.iter() {
+        sum = (sum << 8) + (byte as u128);
+        // println!("byte: {}; sum: {}", byte, sum);
     }
-    // println!("{:?}", sum);
-    sum
+    let hash = (sum % modulant) as usize;
+    // println!("HASH: {:b}", hash);
+    (sum % modulant) as usize
+
     // let mut sum = 0;
     // let modulant = 2_usize.pow(num_of_bits as u32);
     // for &byte in bytes.iter().rev() {
