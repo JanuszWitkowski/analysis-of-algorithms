@@ -153,7 +153,9 @@ fn double_spending(q: f64, n: usize, threshold: usize) -> bool {
             attack_successful = true;
             break;
         }
-        if chain_fake <= n + threshold {    // Adwersarz się poddaje - uznaje że nie nadgoni uczciwej gałęzi.
+        if chain_real - chain_fake >= threshold {    // Adwersarz się poddaje - uznaje że nie nadgoni uczciwej gałęzi.
+        // if chain_fake <= n + threshold {
+        // if chain_real >= n + threshold {
             attack_successful = false;
             break;
         }

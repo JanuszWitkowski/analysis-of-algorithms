@@ -70,7 +70,7 @@ def plotting_theory_n(filenames: List[str]):
     titles = []
     qss = []
     numbers = []
-    labels = ["Nakamuto", "Grunspan"]
+    labels = ["Nakamoto", "Grunspan"]
     for filename in filenames:
         title = proper_name(filename)
         qs, nakas, gruns = open_csv_theory(filename)
@@ -87,7 +87,7 @@ def plotting_theory_p(filenames: List[str]):
     qss_stripped = []
     numbers = []
     numbers_stripped = []
-    labels = ["Nakamuto", "Grunspan"]
+    labels = ["Nakamoto", "Grunspan"]
     for filename in filenames:
         title = proper_name(filename)
         qs, nakas, gruns = open_csv_theory(filename)
@@ -121,7 +121,7 @@ def plotting_both(filenames1: List[str], filenames2: List[str]):
     titles = []
     qss = []
     numbers = []
-    labels = ["Nakamuto", "Grunspan", "Empirum"]
+    labels = ["Nakamoto", "Grunspan", "Empirum"]
     for i in range(len(filenames1)):
         filename1 = filenames1[i]
         filename2 = filenames2[i]
