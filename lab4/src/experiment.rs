@@ -33,14 +33,14 @@ pub fn theory_fixed_n() {
         writeln!(output, "{}", q).unwrap();
     }
     // let (mut filename, mut output);
-    let (mut result_nakamuto, mut result_grunspan);
+    let (mut result_nakamoto, mut result_grunspan);
     for n in ns {
         filename = format!("{}{}{}{}{}", NAME_RESULTS, NAME_THEORY, NAME_N, n, NAME_FORMAT);
         output = File::create(filename).unwrap();
         for q in &qs {
-            result_nakamuto = theory::nakamuto(*q, n);
+            result_nakamoto = theory::nakamoto(*q, n);
             result_grunspan = theory::grunspan(*q, n);
-            writeln!(output, "{};{};{}", q, result_nakamuto, result_grunspan).unwrap();
+            writeln!(output, "{};{};{}", q, result_nakamoto, result_grunspan).unwrap();
         }
         println!("{}{}", MSG_FIXED_N, n);
     }
@@ -54,13 +54,13 @@ pub fn theory_fixed_p() {
     let ps = [0.001_f64, 0.01, 0.1];
     let qs = calculate_qs();
     let (mut filename, mut output);
-    let (mut n_nakamuto, mut n_grunspan);
+    let (mut n_nakamoto, mut n_grunspan);
     for p in ps {
         filename = format!("{}{}{}{}{}", NAME_RESULTS, NAME_THEORY, NAME_P, p, NAME_FORMAT);
         output = File::create(filename).unwrap();
         for q in &qs {
-            (n_nakamuto, n_grunspan) = binary_searches(p, *q, N_FIXED_P_LEFT, N_FIXED_P_RIGHT);
-            writeln!(output, "{};{};{}", q, n_nakamuto, n_grunspan).unwrap();
+            (n_nakamoto, n_grunspan) = binary_searches(p, *q, N_FIXED_P_LEFT, N_FIXED_P_RIGHT);
+            writeln!(output, "{};{};{}", q, n_nakamoto, n_grunspan).unwrap();
         }
         println!("{}{}", MSG_FIXED_P, p);
     }
@@ -79,9 +79,11 @@ pub fn double_spending_simulator() {
         filename = format!("{}{}{}{}{}", NAME_RESULTS, NAME_SIM, NAME_N, n, NAME_FORMAT);
         output = File::create(filename).unwrap();
         for q in &qs {
+            // MONTE CARLO
             result = 0.0;
             for _ in 0..NUMBER_OF_SIMULATIONS {
-                if double_spending(*q, n) {
+                // if double_spending(*q, n, THRESHOLD) {
+                if double_spending(*q, n, THRESHOLD * n) {
                     result += 1.0;
                 }
             }
@@ -103,10 +105,10 @@ fn binary_searches(p: f64, q: f64, l: usize, r: usize) -> (usize, usize) {
     let (mut left, mut right) = (l, r);
     let mut mid = 0;
     let mut result;
-    // Nakamuto
+    // Nakamoto
     while left < right {
         mid = (left + right) / 2;
-        result = theory::nakamuto(q, mid);
+        result = theory::nakamoto(q, mid);
         // println!("[N](p={} | q={} | mid={}) result={}", p, q, mid, result);
         if result <= p {
             right = mid;
@@ -114,7 +116,7 @@ fn binary_searches(p: f64, q: f64, l: usize, r: usize) -> (usize, usize) {
             left = mid + 1;
         }
     }
-    let n_nakamuto = mid;
+    let n_nakamoto = mid;
     // Grunspan
     (left, right) = (l, r);
     while left < right {
@@ -128,32 +130,34 @@ fn binary_searches(p: f64, q: f64, l: usize, r: usize) -> (usize, usize) {
         }
     }
     let n_grunspan = mid;
-    (n_nakamuto, n_grunspan)
+    (n_nakamoto, n_grunspan)
 }
 
-fn double_spending(q: f64, n: usize) -> bool {
+// DOUBLE SPENDING - wersja z dwoma zmiennymi
+fn double_spending(q: f64, n: usize, threshold: usize) -> bool {
+    // Gałąź uczciwych użytkowników oraz gałąź adwersarza
     let (mut chain_real, mut chain_fake) = (0, 0);
     let mut prob: f64;
-    let answer: bool;
-    loop {
+    let attack_successful: bool;
+    loop {      // Powtarzaj dopóki adwersarzowi się nie uda lub się nie podda.
         prob = rand::thread_rng().gen();
-        if prob <= q {
+        if prob <= q {          // Adwersarz wybudował blok przed uczciwymi użytkownikami.
             chain_fake += 1;
-        } else {
+        } else {                // Uczciwi użytkownicy byli pierwszym w wybudowaniu bloku.
             chain_real += 1;
         }
-        if chain_real < n {
+        if chain_real < n {     // Czekamy aż uczciwa gałąź zatwierdzi prawdziwą tranzakcję.
             continue;
         }
-        if chain_fake >= chain_real {
-            answer = true;
+        if chain_fake >= chain_real {       // Adwersarz wybudował dłuższy ciąg bloków i publikuje go.
+            attack_successful = true;
             break;
         }
-        if chain_fake <= n + THRESHOLD {
-            answer = false;
+        if chain_fake <= n + threshold {    // Adwersarz się poddaje - uznaje że nie nadgoni uczciwej gałęzi.
+            attack_successful = false;
             break;
         }
     }
-    answer
+    attack_successful
 }
 

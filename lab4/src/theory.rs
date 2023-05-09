@@ -1,4 +1,4 @@
-pub fn nakamuto(q: f64, n: usize) -> f64 {
+pub fn nakamoto(q: f64, n: usize) -> f64 {
     // let p = 1.0 - q;
     // let lambda = (n as f64) * (q / p);
     // let exp_minus_lambda = (- lambda).exp();
@@ -30,19 +30,33 @@ pub fn nakamuto(q: f64, n: usize) -> f64 {
 }
 
 pub fn grunspan(q: f64, n: usize) -> f64 {
+    // let p = 1.0 - q;
+    // let mut sum = 1.0;
+    // let pn = p.powf(n as f64);
+    // let qn = q.powf(n as f64);
+    // let mut pk = 1.0;
+    // let mut qk = 1.0;
+    // let mut newton = 1.0;
+    // for k in 0..n {
+    //     sum -= newton * (pn*qk - qn*pk);
+    //     newton = newton * ((k + n) as f64) / ((k + 1) as f64);
+    //     pk *= p;
+    //     qk *= q;
+    // }
+    // sum
     let p = 1.0 - q;
-    let mut sum = 1.0;
+    let mut sum = 0.0;
     let pn = p.powf(n as f64);
     let qn = q.powf(n as f64);
-    let mut pk = 1.0;
-    let mut qk = 1.0;
-    let mut newton = 1.0;
+    let mut pk = 1.0;   // p^0 = 1
+    let mut qk = 1.0;   // q^0 = 1
+    let mut newton = 1.0;   // (n 0) = 1
     for k in 0..n {
-        sum -= newton * (pn*qk - qn*pk);
-        newton = newton * ((k + n) as f64) / ((k + 1) as f64);
+        sum += newton * (pn*qk - qn*pk);
+        newton = newton * ((k + n) as f64) / ((k + 1) as f64);  // Incremental formula for Newton
         pk *= p;
         qk *= q;
     }
-    sum
+    1.0 - sum
 }
 
