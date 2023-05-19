@@ -1,6 +1,6 @@
 using Dates
 
-global const RING_SIZE = 5
+global const RING_SIZE = 6
 
 function isIllegal(config)
     count = 0

@@ -4,6 +4,7 @@ use std::env;
 use std::collections::HashSet;
 
 const DEFAULT_RING_SIZE:    usize = 5;
+const MAX_VECTOR_SIZE:      usize = 10;
 
 fn is_illegal(config: &Vec<u8>) -> bool {
     let ring_size = config.len();
@@ -61,9 +62,9 @@ fn filter_configs(configs: HashSet<Vec<u8>>) -> HashSet<Vec<u8>> {
     new_set
 }
 
-fn max_steps(ring_size: usize) -> usize {
-    let mut configs = filter_configs(get_all_configs(ring_size));
-    println!("Number of illegal configs: {}", configs.len());
+fn max_steps(mut configs: HashSet<Vec<u8>>, ring_size: usize) -> usize {
+    // let mut configs = filter_configs(get_all_configs(ring_size));
+    // println!("Number of illegal configs: {}", configs.len());
     let mut steps = 0;
     println!("Starting...");
     while !configs.is_empty() {
@@ -111,7 +112,11 @@ fn main() {
             DEFAULT_RING_SIZE
         }
     };
+    let x = [(); std::usize::MAX];
+    println!("Hello, world! {}", x.len());
     println!("Ring size: {}", ring_size);
-    let max_steps = max_steps(ring_size);
+    let mut configs = filter_configs(get_all_configs(ring_size));
+    println!("Number of illegal configs: {}", configs.len());
+    let max_steps = max_steps(configs, ring_size);
     println!("Max steps: {}", max_steps);
 }
