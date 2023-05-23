@@ -10,12 +10,12 @@ const GRAPH_SIZE:       usize = 1000;
 const EDGE_FREQUENCY:   f64 = 0.1;
 
 fn maximal_independent_set(graph: &Graph) -> HashSet<usize> {
-    let n = graph.n;
+    // Atomically Reference Counted - thread-safe reference-counting pointer
     let independent = Arc::new(Mutex::new(HashSet::new()));
     let g = Arc::new(Mutex::new((*graph).clone()));
-
+    // Get vector of threads; each thread is responsible for a distinct node in graph
     let threads: Vec<JoinHandle<()>> = 
-        (0..n)
+        (0..graph.n)
         .map(|i| {
             let g = Arc::clone(&g);
             let independent = Arc::clone(&independent);
@@ -30,9 +30,10 @@ fn maximal_independent_set(graph: &Graph) -> HashSet<usize> {
                         State::Illegal => {     // Remove this node from IndependentSet
                             independent.remove(&i);
                             g.update_node_state(i, &independent);
+                            // Also update neighbors, because the IS was shortened
                             g.update_node_states_of_neighbors(i, &independent);
                         },
-                        State::Addable => {  // Add this node to IndependentSet
+                        State::Addable => {     // Add this node to IndependentSet
                             independent.insert(i);
                             g.update_node_state(i, &independent);
                         },

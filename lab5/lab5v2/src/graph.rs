@@ -3,10 +3,10 @@ use rand::Rng;
 
 #[derive(Clone, PartialEq)]
 pub enum State {
-    Independent,
-    Dependent,
-    Illegal,
-    Addable
+    Independent,    // is in IS and has no neighbors in IS
+    Dependent,      // isn't in IS and has some neighbors in IS
+    Illegal,        // is in IS, but has at least one neighbor in IS as well
+    Addable         // isn't in IS, but has no neighbors in IS
 }
 
 #[derive(Clone)]

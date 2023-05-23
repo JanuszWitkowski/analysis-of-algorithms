@@ -52,7 +52,7 @@ fn filter_configs(configs: HashSet<[u8; RING_SIZE]>) -> HashSet<[u8; RING_SIZE]>
         .collect()
 }
 
-fn max_steps(mut configs: HashSet<[u8; RING_SIZE]>) -> usize {
+fn simulate_steps_for_configs(mut configs: HashSet<[u8; RING_SIZE]>) -> usize {
     let mut steps = 0;
     println!("Starting...");
     while !configs.is_empty() {
@@ -87,7 +87,7 @@ fn max_steps(mut configs: HashSet<[u8; RING_SIZE]>) -> usize {
 
 pub fn me_experiment() {
     println!("ME EXPERIMENT");
-    
+
     println!("Ring size: {}", RING_SIZE);
 
     let timer = std::time::Instant::now();
@@ -96,9 +96,9 @@ pub fn me_experiment() {
     println!("Number of illegal configs: {}", configs.len());
 
     let timer = std::time::Instant::now();
-    let max_steps = max_steps(configs);
+    let maximal_number_of_steps = simulate_steps_for_configs(configs);
     println!("Time spent on simulations: {:?}", timer.elapsed());
-    println!("Max steps: {}", max_steps);
+    println!("Maximal Number of Steps: {}", maximal_number_of_steps);
 
     println!();
 }
