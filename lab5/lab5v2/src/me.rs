@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-const RING_SIZE:        usize = 6;
+const RING_SIZE:        usize = 5;
 // const MAX_HASHSET_SIZE: usize = 100_000_000;
 
 fn is_illegal(config: &[u8]) -> bool {
@@ -86,6 +86,8 @@ fn max_steps(mut configs: HashSet<[u8; RING_SIZE]>) -> usize {
 }
 
 pub fn me_experiment() {
+    println!("ME EXPERIMENT");
+    
     println!("Ring size: {}", RING_SIZE);
 
     let timer = std::time::Instant::now();
@@ -97,4 +99,6 @@ pub fn me_experiment() {
     let max_steps = max_steps(configs);
     println!("Time spent on simulations: {:?}", timer.elapsed());
     println!("Max steps: {}", max_steps);
+
+    println!();
 }

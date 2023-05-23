@@ -1,5 +1,5 @@
 use crate::graph::Graph;
-use crate::graph::Color;
+use crate::graph::State;
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -14,57 +14,77 @@ fn maximal_independent_set(graph: &Graph) -> HashSet<usize> {
     let independent = Arc::new(Mutex::new(HashSet::new()));
     let g = Arc::new(Mutex::new((*graph).clone()));
 
-    let processes: Vec<JoinHandle<()>> = 
+    let threads: Vec<JoinHandle<()>> = 
         (0..n)
         .map(|i| {
             let g = Arc::clone(&g);
             let independent = Arc::clone(&independent);
             thread::spawn(move || {
                 loop {
-                    let time = time::Duration::from_millis(fastrand::u64(10..100));
+                    let time = time::Duration::from_millis(fastrand::u64(5..100));
                     thread::sleep(time);
-                    let mut independent = independent.lock().unwrap();
-                    let mut g = g.lock().unwrap();
-                    match g.nodes[i].color {
-                        Color::Red => {
+                    let mut independent = independent.lock().unwrap();  // LOCK
+                    let mut g = g.lock().unwrap();                      // LOCK
+                    // BEGIN CRITICAL SECTION
+                    match g.nodes[i].state {
+                        State::Illegal => {     // Remove this node from IndependentSet
                             independent.remove(&i);
-                            g.update_node_color(i, &independent);
-                            g.update_node_colors_of_neighbors(i, &independent);
+                            g.update_node_state(i, &independent);
+                            g.update_node_states_of_neighbors(i, &independent);
                         },
-                        Color::Yellow => {
+                        State::Addable => {  // Add this node to IndependentSet
                             independent.insert(i);
-                            g.update_node_color(i, &independent);
+                            g.update_node_state(i, &independent);
                         },
                         _ => (),
                     }
+
+                    // Check if current configuration satisfies the criteria
                     let mut stop = true;
                     for node in &g.nodes {
-                        if node.color != Color::Black && node.color != Color::White {
+                        if node.state != State::Independent && node.state != State::Dependent {
                             stop = false;
                         }
                     }
                     if stop {
                         break;
                     }
-                }
+                    // END CRITICAL SECTION
+                }   // loop
             })
         }).collect();
-        processes.into_iter().for_each(|p| p.join().unwrap());
+        threads.into_iter().for_each(|p| p.join().unwrap());
         let lock = Arc::try_unwrap(independent).expect("Lock has more than one owner!");
         lock.into_inner().expect("Mutex not unlockable!")
 }
 
 pub fn mis_experiment() {
-    // println!("Hello! This is a placeholder for Maximum Independent Set experiment!");
+    println!("MIS EXPERIMENT");
+
     println!("Graph size: {}; Edge frequency: {}", GRAPH_SIZE, EDGE_FREQUENCY);
 
     let timer = std::time::Instant::now();
     let graph = Graph::new_random(GRAPH_SIZE, EDGE_FREQUENCY);
-    println!("Graph generation time: {:?}", timer.elapsed());
+    let te = timer.elapsed();
+    let mut edges = HashSet::new();
+    for node in &graph.nodes {
+        let uid = node.id;
+        for vid in &node.neighborhood {
+            if !edges.contains(&(*vid, uid)) {
+                edges.insert((uid, *vid));
+            }
+        }
+    }
+    // println!("Edges: {:?}", edges);
+    println!("Number of edges: {}", edges.len());
+    println!("Graph generation time: {:?}", te);
 
     let timer = std::time::Instant::now();
     let independent = maximal_independent_set(&graph);
+    let te = timer.elapsed();
     println!("Maximal Independent Set: {:?}", independent);
     println!("Size of Independent Set: {}", independent.len());
-    println!("Time: {:?}", timer.elapsed());
+    println!("Time: {:?}", te);
+
+    println!();
 }

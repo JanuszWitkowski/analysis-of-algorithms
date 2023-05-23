@@ -2,42 +2,42 @@ use std::collections::HashSet;
 use rand::Rng;
 
 #[derive(Clone, PartialEq)]
-pub enum Color {
-    Red,
-    Yellow,
-    White,
-    Black
+pub enum State {
+    Independent,
+    Dependent,
+    Illegal,
+    Addable
 }
 
 #[derive(Clone)]
 pub struct Node {
     pub id:             usize,
-    pub color:          Color,
+    pub state:          State,
     pub neighborhood:   HashSet<usize>,
 }
 
 impl Node {
     pub fn new(id: usize) -> Node {
-        Node{ id, color: Color::Yellow, neighborhood: HashSet::new() }
+        Node{ id, state: State::Addable, neighborhood: HashSet::new() }
     }
 
     pub fn add_neighbor(&mut self, neighbor: usize) {
         self.neighborhood.insert(neighbor);
     }
 
-    pub fn update_color(&mut self, independent: &HashSet<usize>) {
+    pub fn update_state(&mut self, independent: &HashSet<usize>) {
         let is_ind = independent.contains(&self.id);
         let neighbor_ind = self.any_independent_neighbor(independent);
         if is_ind {
             if neighbor_ind {
-                self.color = Color::Red;
+                self.state = State::Illegal;
             } else {
-                self.color = Color::Black;
+                self.state = State::Independent;
             }
         } else if neighbor_ind {
-            self.color = Color::White;
+            self.state = State::Dependent;
         } else {
-            self.color = Color::Yellow;
+            self.state = State::Addable;
         }
     }
 
@@ -88,19 +88,19 @@ impl Graph {
         }
         let independent = HashSet::new();
         for i in 0..n {
-            graph.nodes[i].update_color(&independent);
+            graph.nodes[i].update_state(&independent);
         }
         graph
     }
 
-    pub fn update_node_color(&mut self, u: usize, independent: &HashSet<usize>) {
-        self.nodes[u].update_color(independent);
+    pub fn update_node_state(&mut self, u: usize, independent: &HashSet<usize>) {
+        self.nodes[u].update_state(independent);
     }
 
-    pub fn update_node_colors_of_neighbors(&mut self, u: usize, independent: &HashSet<usize>) {
+    pub fn update_node_states_of_neighbors(&mut self, u: usize, independent: &HashSet<usize>) {
         let neighs = self.nodes[u].neighborhood.clone();
         for v in neighs {
-            self.nodes[v].update_color(independent);
+            self.nodes[v].update_state(independent);
         }
     }
 }
