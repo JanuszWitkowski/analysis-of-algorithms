@@ -27,7 +27,7 @@ impl Node {
 
     pub fn update_state(&mut self, independent: &HashSet<usize>) {
         let is_ind = independent.contains(&self.id);
-        let neighbor_ind = self.any_independent_neighbor(independent);
+        let neighbor_ind = self.at_least_one_independent_neighbor(independent);
         if is_ind {
             if neighbor_ind {
                 self.state = State::Illegal;
@@ -41,7 +41,7 @@ impl Node {
         }
     }
 
-    fn any_independent_neighbor(&self, independent: &HashSet<usize>) -> bool {
+    fn at_least_one_independent_neighbor(&self, independent: &HashSet<usize>) -> bool {
         for neighbor in &self.neighborhood {
             if independent.contains(neighbor) {
                 return true;

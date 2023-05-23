@@ -72,13 +72,7 @@ fn simulate_steps_for_configs(mut configs: HashSet<[u8; RING_SIZE]>) -> usize {
             }
         }
 
-        configs =
-            new_configs
-            .into_iter()
-            .filter(|config| is_illegal(config))
-            // .filter(|config| is_illegal!(config))
-            .collect();
-
+        configs = new_configs.into_iter().filter(|config| is_illegal(config)).collect();
         steps += 1;
         println!("{} steps finished, configs left: {}", steps, configs.len());
     }
