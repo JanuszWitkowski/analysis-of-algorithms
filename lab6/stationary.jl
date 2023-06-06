@@ -1,4 +1,4 @@
-ITER = 99999999
+ITER = 123456789
 
 function stationary_distribution(matrix)
     (n, _) = size(matrix)
