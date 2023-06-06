@@ -1,11 +1,12 @@
+#!/usr/bin/python3
 import matplotlib.pyplot as plt
 import csv
 
 alphas = [0, 0.25, 0.5, 0.75, 0.85, 1]
-data = {a: [] for a in alphas}
+data = {alpha: [] for alpha in alphas}
 
 if __name__ == "__main__":
-    with open('L6/z14.csv') as csvfile:
+    with open('ex14_data.csv') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for a,row in zip(alphas,reader):
             for item in row:
