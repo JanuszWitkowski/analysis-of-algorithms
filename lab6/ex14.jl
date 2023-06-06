@@ -42,8 +42,12 @@ for (i,alpha) in enumerate(alphas)
 end
 println()
 println("CONVERGENCE")
+file = open("ex14_data.csv", "w")
 for i in 1:6
-    println(join(data[i,:], ';'))
+    to_write = join(data[i,:], ';')
+    println(to_write)
+    write(file, to_write, "\n")
 end
+close(file)
 println()
 
