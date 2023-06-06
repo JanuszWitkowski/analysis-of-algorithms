@@ -2,5 +2,11 @@ ITER = 123456789
 
 function stationary_distribution(matrix)
     (n, _) = size(matrix)
-    return transpose(ones(Float64, n) / n) * (matrix ^ ITER)
+    starting = ones(Float64, n) / n
+    return transpose(starting) * (matrix ^ ITER)
+    # display(matrix)
+    # display(starting)
+    # res = (starting \ matrix) / n
+    # display(res)
+    # return res
 end

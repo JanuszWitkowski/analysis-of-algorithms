@@ -18,6 +18,10 @@ function calculate_data_for_plotting(graph, a)
     return data
 end
 
+function ranking(stat_dist)
+    return reverse(sortperm(transpose(stat_dist)))
+end
+
 
 
 alphas = [0, 0.25, 0.5, 0.75, 0.85, 1]
@@ -36,18 +40,20 @@ println("STATIONARY DISTRIBUTIONS")
 for (i,alpha) in enumerate(alphas)
     println("alpha=", alpha)
     m_matrix = generate_M_matrix(graph, alpha)
-    println(stationary_distribution(m_matrix))
+    stat_dist = stationary_distribution(m_matrix)
+    println(stat_dist)
+    println("Ranking: ", ranking(stat_dist))
     println()
     data[i,:] = calculate_data_for_plotting(graph, alpha)
 end
 println()
-println("CONVERGENCE")
-file = open("ex14_data.csv", "w")
-for i in 1:6
-    to_write = join(data[i,:], ';')
-    println(to_write)
-    write(file, to_write, "\n")
-end
-close(file)
+# println("CONVERGENCE")
+# file = open("ex14_data.csv", "w")
+# for i in 1:6
+#     to_write = join(data[i,:], ';')
+#     println(to_write)
+#     write(file, to_write, "\n")
+# end
+# close(file)
 println()
 

@@ -1,4 +1,5 @@
 #!/usr/local/bin/julia
+using LinearAlgebra
 include("matrices.jl")
 include("stationary.jl")
 
