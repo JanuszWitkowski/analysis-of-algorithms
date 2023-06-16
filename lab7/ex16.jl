@@ -2,6 +2,7 @@
 counter = 0
 
 function f(n::UInt64)
+    # Counting
     global counter
     counter += 1
     if n >= 2
@@ -40,6 +41,9 @@ if length(ARGS) > 0
 end
 ns = 0:n_max
 experiments_range = 1:m
+
+println("n\t|theory\t|gen\t|ctr\t|error\t(m=$m)")
+println("----------------------------------------")
 for n in ns
     c_acc = 0
     for _ in experiments_range
@@ -49,8 +53,12 @@ for n in ns
         counter = 0
     end
     c_value = c_acc / m
+    c_rounded = round(c_value, digits=1)
     t_value = theory(n)
     g_value = generating_function(n)
-    println("n = $n: ctr = $c_value; theory = $t_value; gen = $g_value")
+    err = abs(c_value - t_value)/t_value
+    err_rounded = round(err, digits=5)
+    # println("$n\t|$t_value\t|$g_value\t|$c_value\t|$err")
+    println("$n\t|$t_value\t|$g_value\t|$c_rounded\t|$err_rounded")
 end
 
