@@ -13,6 +13,14 @@ function f(n::UInt64)
     end
 end
 
+function generating_function(n::UInt64)::UInt128
+    if n < 2
+        return 1
+    else
+        return 2 + sum(map(x -> generating_function(x), [i for i in 1:n-1]))
+    end
+end
+
 function theory(n::UInt64)::UInt128
     if n < 2
         return 1
@@ -42,5 +50,7 @@ for n in ns
     end
     c_value = c_acc / m
     t_value = theory(n)
-    println("n = $n: ctr = $c_value; theory = $t_value")
+    g_value = generating_function(n)
+    println("n = $n: ctr = $c_value; theory = $t_value; gen = $g_value")
 end
+
