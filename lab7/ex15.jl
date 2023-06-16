@@ -1,7 +1,7 @@
 #!/usr/local/bin/julia
 counter = 0
 
-function f(n::Int128)::Int128
+function f(n::Int64)::Int128
     s = 0
     if n == 0
         return 1
@@ -16,16 +16,16 @@ function f(n::Int128)::Int128
     end
 end
 
-function theory(n::Int128)::Int128
+function theory(n::Int64)::Int128
     return (2^n) - 1
 end
 
 
-n_range = 16
+n_max = 16
 if length(ARGS) > 0
-    n_range = parse(Int128, ARGS[1])
+    n_max = parse(Int64, ARGS[1])
 end
-ns = 0:n_range
+ns = 0:n_max
 for n in ns
     s_value = f(n)
     c_value = counter
