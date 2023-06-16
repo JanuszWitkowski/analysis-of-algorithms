@@ -14,6 +14,9 @@ def f(n: int) -> int:
             global counter
             counter += 1
         return s
+
+def theory(n: int) -> int:
+    return 2 ** n - 1
     
 
 if __name__ == "__main__":
@@ -24,6 +27,10 @@ if __name__ == "__main__":
     for n in ns:
         s_value = f(n)
         c_value = counter
+        t_value = theory(n)
         counter = 0
         print(f"n = {n}: ctr = {c_value}; s = {s_value}")
+        if c_value != t_value:
+            print(f"ERROR: theory={t_value} != {c_value}=ctr !!!")
+            break
 
