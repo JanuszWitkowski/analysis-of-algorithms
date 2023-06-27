@@ -9,7 +9,7 @@ fn run_for_ns(hash: fn(usize, usize) -> usize, ns: &[usize], b: usize) -> Vec<(f
     .iter()
     .map(|&n| {
         let m = multiset::MultiSet::new(n);
-        let n_est = hyperloglog::hyperloglog(m, hash, b);
+        let (n_est, _) = hyperloglog::hyperloglog(m, hash, b);
         let n = n as f64;
         (n, n_est as f64)
     })
@@ -21,7 +21,7 @@ pub fn test_estimator_for_hash(ns: &[usize], bits: usize, hash: fn(usize, usize)
     let mut f = File::create(filename).unwrap();
     for &n in ns {
         let m = multiset::MultiSet::new(n);
-        let n_est = hyperloglog::hyperloglog(m, hash, bits);
+        let (n_est, _) = hyperloglog::hyperloglog(m, hash, bits);
         let n = n as f64;
         writeln!(f, "{};{};{}", n, n_est, n_est / n).unwrap();
         println!("Done with {} for n={}", hashname, n);
@@ -47,4 +47,10 @@ pub fn test_best_b(ns: &[usize], min_count: usize) {
     let mut f = File::create(filename).unwrap();
     println!("b = {}", left);
     writeln!(f, "{}", left).unwrap();
+}
+
+
+pub fn test_distribution(n: usize, bits: usize, hash: fn(usize, usize) -> usize, hashname: &'static str) {
+    let m = multiset::MultiSet::new(n);
+    hyperloglog::hyperloglog(m, hash, bits);
 }
